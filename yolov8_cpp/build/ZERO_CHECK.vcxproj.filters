@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\python\upwork\onnxruntime with CPP fastapi\yolov8_cpp\build\CMakeFiles\efa30e1d083cb01d13a31897dbd453e1\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{DF6B8B0A-196B-3AC3-87EB-30F72A95D5FE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
