@@ -1,0 +1,17 @@
+# ide related
+.vs/*
+.idea/*
+# build
+.build/*
+x64/*
+cmake-build-debug/*
+cmake-build-debug-visual-studio/*
+# ignore CMakeLists.txt but add example file
+CMakeLists.txt
+# dlls:
+*.dll
+# vs-like objects
+*.sln
+*vcxproj*
+packages.config
+packages/*
