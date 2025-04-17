@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="D:\python\upwork\onnxruntime with CPP fastapi\yolov8_onnx_cpp\yolov8-onnx-cpp\src\wrapper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="D:\python\upwork\onnxruntime with CPP fastapi\yolov8_onnx_cpp\yolov8-onnx-cpp\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{268EE899-DAE8-3233-AC18-E529461C94C6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

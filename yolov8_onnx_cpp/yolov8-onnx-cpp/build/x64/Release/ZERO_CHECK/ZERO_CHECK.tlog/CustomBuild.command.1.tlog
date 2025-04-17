@@ -1,0 +1,10 @@
+^D:\PYTHON\UPWORK\ONNXRUNTIME WITH CPP FASTAPI\YOLOV8_ONNX_CPP\YOLOV8-ONNX-CPP\BUILD\CMAKEFILES\DA52F601B560421A78D56FCCB7A69D73\GENERATE.STAMP.RULE
+setlocal
+C:\mingw64\bin\cmake.exe "-SD:/python/upwork/onnxruntime with CPP fastapi/yolov8_onnx_cpp/yolov8-onnx-cpp" "-BD:/python/upwork/onnxruntime with CPP fastapi/yolov8_onnx_cpp/yolov8-onnx-cpp/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "D:/python/upwork/onnxruntime with CPP fastapi/yolov8_onnx_cpp/yolov8-onnx-cpp/build/YOLOv8CPP.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
