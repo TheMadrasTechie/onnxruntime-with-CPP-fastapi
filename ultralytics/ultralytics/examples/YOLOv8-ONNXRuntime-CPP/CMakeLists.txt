@@ -1,99 +1,40 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
+project(YOLOv8ONNXRuntime)
 
-set(PROJECT_NAME Yolov8OnnxRuntimeCPPInference)
-project(${PROJECT_NAME} VERSION 0.0.1 LANGUAGES CXX)
+# Set ONNX and OpenCV paths
+set(OpenCV_DIR "C:/opencv/build")
+set(OpenCV_BIN_DIR "C:/opencv/build/x64/vc16/bin")
+set(OpenCV_DLL "opencv_world4110.dll")  # change if you use a different version
 
+set(ONNXRUNTIME_DIR "C:/onnxruntime/onnxruntime-win-x64-1.21.0")
 
-# -------------- Support C++17 for using filesystem  ------------------#
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# Include headers
+include_directories(${ONNXRUNTIME_DIR}/include)
+include_directories(${OpenCV_DIR}/include)
 
-# -------------- OpenCV  ------------------#
+# Add your main source
+add_executable(yolov8_app main.cpp)
+
+# Find and link OpenCV
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries(yolov8_app ${OpenCV_LIBS})
 
+# Link ONNX Runtime
+target_link_libraries(yolov8_app "${ONNXRUNTIME_DIR}/lib/onnxruntime.lib")
 
-# -------------- Compile CUDA for FP16 inference if needed  ------------------#
-option(USE_CUDA "Enable CUDA support" ON)
-if (NOT APPLE AND USE_CUDA)
-    find_package(CUDA REQUIRED)
-    include_directories(${CUDA_INCLUDE_DIRS})
-    add_definitions(-DUSE_CUDA)
-else ()
-    set(USE_CUDA OFF)
-endif ()
-
-# -------------- ONNXRUNTIME  ------------------#
-
-# Set ONNXRUNTIME_VERSION
-set(ONNXRUNTIME_VERSION 1.15.1)
-
-if (WIN32)
-    if (USE_CUDA)
-        set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-win-x64-gpu-${ONNXRUNTIME_VERSION}")
-    else ()
-        set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-win-x64-${ONNXRUNTIME_VERSION}")
-    endif ()
-elseif (LINUX)
-    if (USE_CUDA)
-        set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-linux-x64-gpu-${ONNXRUNTIME_VERSION}")
-    else ()
-        set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-linux-x64-${ONNXRUNTIME_VERSION}")
-    endif ()
-elseif (APPLE)
-    set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-osx-arm64-${ONNXRUNTIME_VERSION}")
-    # Apple X64 binary
-    # set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-osx-x64-${ONNXRUNTIME_VERSION}")
-    # Apple Universal binary
-    # set(ONNXRUNTIME_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/onnxruntime-osx-universal2-${ONNXRUNTIME_VERSION}")
-else ()
-    message(SEND_ERROR "Variable ONNXRUNTIME_ROOT is not set properly. Please check if your cmake project \
-    is not compiled with `-D WIN32=TRUE`, `-D LINUX=TRUE`, or `-D APPLE=TRUE`!")
-endif ()
-
-include_directories(${PROJECT_NAME} ${ONNXRUNTIME_ROOT}/include)
-
-set(PROJECT_SOURCES
-        main.cpp
-        inference.h
-        inference.cpp
+# Copy DLLs after build
+add_custom_command(TARGET yolov8_app POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${ONNXRUNTIME_DIR}/lib/onnxruntime.dll"
+    "$<TARGET_FILE_DIR:yolov8_app>"
 )
 
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
-
-if (WIN32)
-    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${ONNXRUNTIME_ROOT}/lib/onnxruntime.lib)
-    if (USE_CUDA)
-        target_link_libraries(${PROJECT_NAME} ${CUDA_LIBRARIES})
-    endif ()
-elseif (LINUX)
-    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.so)
-    if (USE_CUDA)
-        target_link_libraries(${PROJECT_NAME} ${CUDA_LIBRARIES})
-    endif ()
-elseif (APPLE)
-    target_link_libraries(${PROJECT_NAME} ${OpenCV_LIBS} ${ONNXRUNTIME_ROOT}/lib/libonnxruntime.dylib)
-endif ()
-
-# For windows system, copy onnxruntime.dll to the same folder of the executable file
-if (WIN32)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${ONNXRUNTIME_ROOT}/lib/onnxruntime.dll"
-            $<TARGET_FILE_DIR:${PROJECT_NAME}>)
-endif ()
-
-# Download https://raw.githubusercontent.com/ultralytics/ultralytics/main/ultralytics/cfg/datasets/coco.yaml
-# and put it in the same folder of the executable file
-configure_file(coco.yaml ${CMAKE_CURRENT_BINARY_DIR}/coco.yaml COPYONLY)
-
-# Copy yolov8n.onnx file to the same folder of the executable file
-configure_file(yolov8n.onnx ${CMAKE_CURRENT_BINARY_DIR}/yolov8n.onnx COPYONLY)
-
-# Create folder name images in the same folder of the executable file
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/images
+add_custom_command(TARGET yolov8_app POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${OpenCV_BIN_DIR}/${OpenCV_DLL}"
+    "$<TARGET_FILE_DIR:yolov8_app>"
 )

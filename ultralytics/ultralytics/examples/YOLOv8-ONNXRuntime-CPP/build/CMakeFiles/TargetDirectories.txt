@@ -1,0 +1,3 @@
+D:/python/upwork/onnxruntime with CPP fastapi/ultralytics/ultralytics/examples/YOLOv8-ONNXRuntime-CPP/build/CMakeFiles/yolov8_app.dir
+D:/python/upwork/onnxruntime with CPP fastapi/ultralytics/ultralytics/examples/YOLOv8-ONNXRuntime-CPP/build/CMakeFiles/ALL_BUILD.dir
+D:/python/upwork/onnxruntime with CPP fastapi/ultralytics/ultralytics/examples/YOLOv8-ONNXRuntime-CPP/build/CMakeFiles/ZERO_CHECK.dir
